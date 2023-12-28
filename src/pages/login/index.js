@@ -6,26 +6,36 @@ import { Alert } from "antd";
 import classNames from "classnames";
 
 const Login = () => {
-  const [showAlert, setShowAlert] = useState(false);
+  const [alertInfo, setAlertInfo] = useState({
+    show: false,
+    type: "",
+    message: "",
+  });
+
   const onFinish = (values) => {
-    console.log("Success:", values);
-    setShowAlert(true);
+    setAlertInfo({ show: true, type: "success", message: "登录成功" });
   };
-  
+  const onFinishFailed = (errorInfo) => {
+    setAlertInfo({ show: true, type: "error", message: "登录失败" }); // 登录失败
+  };
+
   return (
     <div className="login">
-      {showAlert && (
+      {alertInfo.show && (
         <Alert
-          message="登录成功"
-          type="success"
+          message={alertInfo.message}
+          type={alertInfo.type}
           className={classNames("alert")}
         />
       )}
-
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />
         {/* 登录表单 */}
-        <Form validateTrigger="onBlur" onFinish={onFinish}>
+        <Form
+          validateTrigger="onBlur"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
           <Form.Item
             name="mobile"
             // 多条校验逻辑 先校验第一条 第一条通过之后再校验第二条
