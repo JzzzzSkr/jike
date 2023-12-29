@@ -1,9 +1,12 @@
 import "./index.scss";
 import { Card, Form, Input, Button, message } from "antd";
 import logo from "@/assets/logo.png";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert } from "antd";
 import classNames from "classnames";
+import { useDispatch } from "react-redux";
+import { fetchLogin } from "@/store/models/token";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [alertInfo, setAlertInfo] = useState({
@@ -12,9 +15,26 @@ const Login = () => {
     message: "",
   });
 
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   const onFinish = (values) => {
+    // console.log(values);
+
+    // 触发异步fetchLogin，把向后端请求的token拿到并且储存在redux里面
+    dispatch(fetchLogin(values));
+
+    // 页面跳转
+    setTimeout(() => {
+      navigate("/");
+    }, 2000);
+
+    // 提示用户
     setAlertInfo({ show: true, type: "success", message: "登录成功" });
+    // message.success("登录成功");
   };
+
   const onFinishFailed = (errorInfo) => {
     setAlertInfo({ show: true, type: "error", message: "登录失败" }); // 登录失败
   };
