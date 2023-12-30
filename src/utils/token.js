@@ -7,6 +7,7 @@ function setToken (token) {
 }
 
 function getToken () {
+  // console.log(localStorage.getItem(TOKENKEY));
   return localStorage.getItem(TOKENKEY)
 }
 

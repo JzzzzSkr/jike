@@ -32,7 +32,6 @@ const Login = () => {
 
     // 提示用户
     setAlertInfo({ show: true, type: "success", message: "登录成功" });
-    // message.success("登录成功");
   };
 
   const onFinishFailed = (errorInfo) => {

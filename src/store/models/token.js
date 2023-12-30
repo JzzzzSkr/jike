@@ -1,15 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { request } from "@/utils";
+import { setToken as setLocalStoreToken, getToken } from "@/utils";
+
+console.log(typeof getToken());
 
 const tokenSlice = createSlice({
   name: "token",
   initialState: {
-    token: "",
+    token: getToken() || "",
   },
   reducers: {
     // 同步修改方法
     setToken(state, action) {
       state.token = action.payload;
+      setLocalStoreToken(action.payload);
     },
   },
 });
