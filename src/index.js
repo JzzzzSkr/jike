@@ -6,6 +6,7 @@ import { RouterProvider } from "react-router-dom";
 import router from "./router";
 import { Provider } from "react-redux"; // 使用provider注入
 import store from "./store"; // 引入store
+import 'normalize.css'
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

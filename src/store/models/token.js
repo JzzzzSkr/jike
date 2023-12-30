@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { request } from "@/utils";
 import { setToken as setLocalStoreToken, getToken } from "@/utils";
 
-console.log(typeof getToken());
+// console.log(typeof getToken());
 
 const tokenSlice = createSlice({
   name: "token",
