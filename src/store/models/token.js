@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { request } from "@/utils";
 import { setToken as setLocalStoreToken, getToken } from "@/utils";
+import { loginAPI,getUserInfoAPI } from "@/apis/user";
 
 // console.log(typeof getToken());
 
@@ -27,7 +28,7 @@ const { setToken: setTokenAction } = userRedux.actions;
 
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
-    const res = await request.post("/authorizations", loginForm);
+    const res = await loginAPI(loginForm);
     dispatch(setTokenAction(res.data.token)); // 使用重命名后的action
   };
 };
@@ -36,7 +37,7 @@ const { setUserInfo: setUserInfoAction } = userRedux.actions;
 
 const fetchUserInfo = () => {
   return async (dispatch) => {
-    const res = await request.get("/user/profile");
+    const res = await getUserInfoAPI();
     dispatch(setUserInfoAction(res.data));
   };
 };

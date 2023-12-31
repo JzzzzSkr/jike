@@ -10,6 +10,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserInfo } from "@/store/models/token";
+import { removeToken } from "@/utils/index";
 
 const { Header, Sider } = Layout;
 
@@ -32,15 +33,16 @@ const items = [
 ];
 
 const GeekLayout = () => {
-  const name = "Michael";
+  // const name = "Michael";
 
   // 获取用户个人信息
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserInfo());
   }, []);
+  const username = useSelector((state) => state.user.userInfo.name);
+  // console.log("userInfo", userInfo);tokenSlice
   
-
   // jump to target page
   const navigate = useNavigate();
   const jumpToPage = (e) => {
@@ -51,14 +53,25 @@ const GeekLayout = () => {
   const location = useLocation();
   const selectedKey = location.pathname;
 
+  // 点击退出按钮退出程序
+  const handleLogout = () => {
+    removeToken()
+    navigate("/login");
+  };
+
   return (
     <Layout>
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">{name}</span>
+          <span className="user-name">{username}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+            <Popconfirm
+              title="是否确认退出？"
+              okText="退出"
+              cancelText="取消"
+              onConfirm={handleLogout}
+            >
               <LogoutOutlined /> 退出
             </Popconfirm>
           </span>
