@@ -4,10 +4,11 @@ import { setToken as setLocalStoreToken, getToken } from "@/utils";
 
 // console.log(typeof getToken());
 
-const tokenSlice = createSlice({
+const userRedux = createSlice({
   name: "token",
   initialState: {
     token: getToken() || "",
+    userInfo: {},
   },
   reducers: {
     // 同步修改方法
@@ -15,11 +16,14 @@ const tokenSlice = createSlice({
       state.token = action.payload;
       setLocalStoreToken(action.payload);
     },
+    setUserInfo(state, action) {
+      state.userInfo = action.payload;
+    },
   },
 });
 
 // 解构actionCreater函数并重命名以避免冲突
-const { setToken: setTokenAction } = tokenSlice.actions;
+const { setToken: setTokenAction } = userRedux.actions;
 
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
@@ -28,5 +32,14 @@ const fetchLogin = (loginForm) => {
   };
 };
 
-export { fetchLogin };
-export default tokenSlice.reducer;
+const { setUserInfo: setUserInfoAction } = userRedux.actions;
+
+const fetchUserInfo = () => {
+  return async (dispatch) => {
+    const res = await request.get("/user/profile");
+    dispatch(setUserInfoAction(res.data));
+  };
+};
+
+export { fetchLogin, fetchUserInfo };
+export default userRedux.reducer;

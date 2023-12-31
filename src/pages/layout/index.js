@@ -9,6 +9,7 @@ import "./index.scss";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchUserInfo } from "@/store/models/token";
 
 const { Header, Sider } = Layout;
 
@@ -33,10 +34,16 @@ const items = [
 const GeekLayout = () => {
   const name = "Michael";
 
+  // 获取用户个人信息
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchUserInfo());
+  }, []);
+  
+
   // jump to target page
   const navigate = useNavigate();
   const jumpToPage = (e) => {
-    
     navigate(e.key);
   };
 
