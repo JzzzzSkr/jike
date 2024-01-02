@@ -37,6 +37,7 @@ request.interceptors.response.use((response) => {
   // 对响应错误做点什么
   // 监控401 token失效
   console.dir(error)
+
   if (error.response.status === 401) {
     removeToken()
     router.navigate('/login')

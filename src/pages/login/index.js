@@ -2,8 +2,7 @@ import "./index.scss";
 import { Card, Form, Input, Button, message } from "antd";
 import logo from "@/assets/logo.png";
 import React, { useEffect, useState } from "react";
-import { Alert } from "antd";
-import classNames from "classnames";
+import { Ant_Alert } from "@/components";
 import { useDispatch } from "react-redux";
 import { fetchLogin } from "@/store/models/token";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +24,7 @@ const Login = () => {
     // 触发异步fetchLogin，把向后端请求的token拿到并且储存在redux里面
     dispatch(fetchLogin(values));
 
+
     // 页面跳转
     setTimeout(() => {
       navigate("/");
@@ -41,11 +41,10 @@ const Login = () => {
   return (
     <div className="login">
       {alertInfo.show && (
-        <Alert
+        <Ant_Alert
           message={alertInfo.message}
           type={alertInfo.type}
-          className={classNames("alert")}
-        />
+        ></Ant_Alert>
       )}
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />

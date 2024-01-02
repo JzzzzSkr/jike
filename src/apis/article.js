@@ -1,4 +1,4 @@
-// 用户相关的请求
+// 封装api接口
 import { request } from "@/utils";
 
 export function loginAPI(fromData) {
@@ -9,11 +9,3 @@ export function loginAPI(fromData) {
     data: fromData,
   });
 }
-
-export function getUserInfoAPI() {
-  return request({
-    url: "/user/profile",
-    method: "GET",
-  });
-}
-

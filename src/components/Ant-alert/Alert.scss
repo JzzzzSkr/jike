@@ -1,0 +1,20 @@
+.alert {
+  position: absolute;
+  left: 50%; /* 水平居中 */
+  top: 12%; /* 垂直居中 */
+  transform: translate(-50%, -50%); /* 从中心点偏移，确保居中 */
+  width: 430px;
+  margin: 0 auto;
+  text-align: center;
+  animation: fadeOut 5s ease-out forwards;
+}
+
+/* Keyframes for fadeOut animation */
+@keyframes fadeOut {
+  0% {
+    opacity: 1; /* Fully visible at the start */
+  }
+  100% {
+    opacity: 0; /* Fully transparent at the end */
+  }
+}
