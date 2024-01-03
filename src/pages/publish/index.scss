@@ -1,18 +1,21 @@
 .publish {
-    position: relative;
+  position: relative;
+}
+
+.ant-upload-list {
+  .ant-upload-list-picture-card-container,
+  .ant-upload-select {
+    width: 146px;
+    height: 146px;
   }
-  
-  .ant-upload-list {
-    .ant-upload-list-picture-card-container,
-    .ant-upload-select {
-      width: 146px;
-      height: 146px;
-    }
+}
+
+.publish-quill {
+  .ql-editor {
+    min-height: 300px;
   }
-  
-  .publish-quill {
-    .ql-editor {
-      min-height: 300px;
-    }
-  }
-  
+}
+
+.btnWidth{
+  width: 100px;
+}

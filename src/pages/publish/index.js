@@ -46,8 +46,8 @@ const Publish = () => {
       title,
       content,
       cover: {
-        type: 0,
-        images: [],
+        type: imageCount,
+        images: fileList,
       },
       channel_id,
     };
@@ -55,6 +55,7 @@ const Publish = () => {
     // 2. 调用接口提交
     createArticleAPI(reqData);
     // console.log(i);
+    // 清空表单
   };
 
   // 图片upload
@@ -170,8 +171,12 @@ const Publish = () => {
 
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
-              <Button size="large" type="primary" htmlType="submit">
-                发布文章
+              <Button size="large" type="primary" htmlType="submit" className="btnWidth">
+                Publish
+              </Button>
+              
+              <Button size="large" type="primary" htmlType="reset" className="btnWidth">
+                Reset
               </Button>
             </Space>
           </Form.Item>
