@@ -17,12 +17,23 @@ import MyEditor from "./components/wangEditor";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useEffect, useState } from "react";
+import { getChannelAPI } from "@/apis/article";
 
 const { Option } = Select;
 
 const Publish = () => {
   const [channelList, setChannelList] = useState([]);
-  
+
+  // 获取列表
+  useEffect(() => {
+    // 获取列表
+    const getChannelList = async () => {
+      const res = await getChannelAPI();
+      setChannelList(res.data.channels);
+    };
+    getChannelList();
+  }, [channelList]);
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -60,9 +71,14 @@ const Publish = () => {
             rules={[{ required: true, message: "请选择文章频道" }]}
           >
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              <Option key={1} value={1}>
+              {channelList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
+              {/* <Option key={1} value={1}>
                 HTML
-              </Option>
+              </Option> */}
             </Select>
           </Form.Item>
 
@@ -73,6 +89,7 @@ const Publish = () => {
           >
             {/* 富文本编辑器 */}
             {/* <MyEditor></MyEditor> */}
+            {/* 这里我没搞清楚ant-design里面的form。item是怎么把值存下来的 */}
             <ReactQuill
               className="publish-quill"
               theme="snow"
