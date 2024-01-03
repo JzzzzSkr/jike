@@ -21,7 +21,8 @@ import "react-quill/dist/quill.snow.css";
 const { Option } = Select;
 
 const Publish = () => {
-  //打印当前路径
+  const [channelList, setChannelList] = useState([]);
+  
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -86,7 +87,6 @@ const Publish = () => {
               </Button>
             </Space>
           </Form.Item>
-          
         </Form>
       </Card>
     </div>

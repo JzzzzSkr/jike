@@ -19,7 +19,7 @@ const userRedux = createSlice({
     },
     setUserInfo(state, action) {
       state.userInfo = action.payload;
-    },
+    }
   },
 });
 
