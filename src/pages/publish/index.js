@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useRef } from "react";
 import {
   Card,
   Breadcrumb,
@@ -11,24 +12,24 @@ import {
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
-import { Link, useSearchParams } from "react-router-dom";
-import "./index.scss";
-import MyEditor from "./components/wangEditor";
-
+import { Link } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useEffect, useState } from "react";
+
+import MyEditor from "./components/wangEditor";
 import { createArticleAPI, getChannelAPI } from "@/apis/article";
+import "./index.scss";
 
 const { Option } = Select;
 
 const Publish = () => {
   const [channelList, setChannelList] = useState([]);
+  const [fileList, setFileList] = useState([]);
+  const [imageCount, setImageCount] = useState(0);
+  const restRef = useRef(null);
 
-  // 获取列表
+  // 获取频道列表
   useEffect(() => {
-    // 获取列表
     const getChannelList = async () => {
       const res = await getChannelAPI();
       setChannelList(res.data.channels);
@@ -36,12 +37,9 @@ const Publish = () => {
     getChannelList();
   }, []);
 
-  // 表单提交，文章创建
+  // 表单提交处理函数
   const onFinish = (values) => {
-    // console.log("Success:", values);
     const { title, content, channel_id } = values;
-
-    // 1. 按照接口文档处理接口数据
     const reqData = {
       title,
       content,
@@ -52,34 +50,24 @@ const Publish = () => {
       channel_id,
     };
 
-    // 2. 调用接口提交
     createArticleAPI(reqData);
-    // console.log(i);
-    // 清空表单
+    // setImageCount(0);
+    restRef.current.click();
   };
 
-  // 图片upload
-  // 把fileList储存下来
-  const [fileList, setFileList] = useState([]);
+  // 上传图片变更处理
   const onChange = (info) => {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
     if (info.file.status === "done") {
       message.success(`${info.file.name} file uploaded successfully`);
-      // 把fileList储存下来
       setFileList(info.fileList);
     } else if (info.file.status === "error") {
       message.error(`${info.file.name} file upload failed.`);
     }
-    // console.log(info);
   };
 
-  // 获取当前的封面是无图，二图还是三图
-  const [imageCount, setImageCount] = useState(0);
-  const onTypeChange = (value) => {
-    // console.log(value.target.value);
-    setImageCount(value.target.value);
+  // 封面图片类型变更处理
+  const onTypeChange = (e) => {
+    setImageCount(e.target.value);
   };
 
   return (
@@ -89,7 +77,7 @@ const Publish = () => {
           <Breadcrumb
             items={[
               { title: <Link to={"/"}>首页</Link> },
-              { title: <Link to={window.location.pathname}>publish</Link> },
+              { title: <Link to={window.location.pathname}>发布</Link> },
             ]}
           />
         }
@@ -119,9 +107,6 @@ const Publish = () => {
                   {item.name}
                 </Option>
               ))}
-              {/* <Option key={1} value={1}>
-                HTML
-              </Option> */}
             </Select>
           </Form.Item>
 
@@ -133,11 +118,6 @@ const Publish = () => {
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            {/* 
-              listType: 决定选择文件框的外观样式
-              showUploadList: 控制显示上传列表
-            */}
-
             {imageCount > 0 && (
               <Upload
                 listType="picture-card"
@@ -159,9 +139,6 @@ const Publish = () => {
             name="content"
             rules={[{ required: true, message: "请输入文章内容" }]}
           >
-            {/* 富文本编辑器 */}
-            {/* <MyEditor></MyEditor> */}
-            {/* 这里我没搞清楚ant-design里面的form。item是怎么把值存下来的 */}
             <ReactQuill
               className="publish-quill"
               theme="snow"
@@ -171,11 +148,19 @@ const Publish = () => {
 
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
-              <Button size="large" type="primary" htmlType="submit" className="btnWidth">
+              <Button size="large" type="primary" htmlType="submit">
                 Publish
               </Button>
-              
-              <Button size="large" type="primary" htmlType="reset" className="btnWidth">
+              <Button
+                size="large"
+                type="primary"
+                htmlType="reset"
+                onClick={() => {
+                  setImageCount(0);
+                }}
+                ref={restRef}
+                style={{ display: "none" }}
+              >
                 Reset
               </Button>
             </Space>
