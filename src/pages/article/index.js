@@ -10,18 +10,31 @@ import {
   Table,
   Tag,
   Popconfirm,
+  message,
 } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getChannelAPI, getArticleListAPI } from "../../apis/article";
+import {
+  getChannelAPI,
+  getArticleListAPI,
+  deleteArticleAPI,
+} from "../../apis/article";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img404 from "@/assets/error.png";
 import { use } from "echarts";
+import { useNavigate } from "react-router-dom";
 
 const Article = () => {
   const status = {
     1: <Tag color="warning">待审核</Tag>,
     2: <Tag color="success">审核通过</Tag>,
+  };
+
+  // 点击编辑按钮，携带文章id跳转到编辑页面
+  const navigate = useNavigate();
+  const jumpPage = (id) => {
+    console.log(id);
+    navigate(`/publish?id=${id}`);
   };
 
   const columns = [
@@ -70,11 +83,16 @@ const Article = () => {
       render: (data) => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={()=>jumpPage(data.id)}
+            />
             <Popconfirm
               title="删除文章"
               description="确认要删除当前文章吗?"
-              onConfirm={""}
+              onConfirm={() => onConfirm(data)}
               okText="Yes"
               cancelText="No"
             >
@@ -94,10 +112,25 @@ const Article = () => {
   const { RangePicker } = DatePicker;
 
   // 获取文章列表
+  const [reqData, setReqData] = useState({
+    status: "",
+    channel_id: "",
+    begin_pubdate: "",
+    end_pubdate: "",
+    page: 1,
+    per_page: 5,
+  });
   const [formData, setFormDate] = useState();
-  const collection = (values) => {
+  const collection = async (values) => {
     // console.log(values);
     setFormDate(values);
+    setReqData({
+      ...reqData,
+      status: values.status,
+      channel_id: values.channel,
+      begin_pubdate: values.date[0].format("YYYY-MM-DD"),
+      end_pubdate: values.date[1].format("YYYY-MM-DD"),
+    });
   };
 
   // 渲染频道列表
@@ -114,13 +147,29 @@ const Article = () => {
     getChannelList();
 
     const getArticleList = async () => {
-      const res = await getArticleListAPI(formData);
+      const res = await getArticleListAPI(reqData);
       // console.log(formData);
+
       setList(res.data.results);
       // console.log(res.data.results);
     };
     getArticleList();
-  }, []);
+  }, [reqData]);
+
+  // console.log(formData);
+
+  const onConfirm = async (data) => {
+    // console.log('确认删除');
+    console.log("id", data.id);
+    const res = await deleteArticleAPI(data.id);
+    // console.log(res);
+    if (res.message === "OK") {
+      message.success("删除成功");
+      setReqData({
+        ...reqData,
+      });
+    }
+  };
 
   return (
     <div>
@@ -163,7 +212,17 @@ const Article = () => {
       </Card>
       {/* 表格区域 */}
       <Card title={"根据筛选条件共查询到 " + list.length + " 条结果："}>
-        <Table columns={columns} dataSource={list} />
+        <Table
+          style={{ height: "300px" }}
+          rowKey="id"
+          columns={columns}
+          dataSource={list}
+          pagination={{
+            total: list.length,
+            pageSize: 2,
+            // onChange: onPageChange,
+          }}
+        />
       </Card>
     </div>
   );

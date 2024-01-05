@@ -12,12 +12,16 @@ import {
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 import MyEditor from "./components/wangEditor";
-import { createArticleAPI, getChannelAPI } from "@/apis/article";
+import {
+  createArticleAPI,
+  getChannelAPI,
+  getArticleById,
+} from "@/apis/article";
 import "./index.scss";
 
 const { Option } = Select;
@@ -27,6 +31,7 @@ const Publish = () => {
   const [fileList, setFileList] = useState([]);
   const [imageCount, setImageCount] = useState(0);
   const restRef = useRef(null);
+  const [searcParams] = useSearchParams();
 
   // 获取频道列表
   useEffect(() => {
@@ -38,7 +43,7 @@ const Publish = () => {
   }, []);
 
   // 表单提交处理函数
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const { title, content, channel_id } = values;
     const reqData = {
       title,
@@ -50,9 +55,17 @@ const Publish = () => {
       channel_id,
     };
 
-    createArticleAPI(reqData);
+    const res = await createArticleAPI(reqData);
     // setImageCount(0);
-    restRef.current.click();
+    console.log(res);
+    // 如果res.message === 'OK'那么执行以下代码
+    if (res.message === "OK") {
+      restRef.current.click();
+      // 如果上传成功，输出提示上传成功
+      message.success("文章发布成功");
+    } else {
+      message.error("文章发布失败");
+    }
   };
 
   // 上传图片变更处理
@@ -69,6 +82,22 @@ const Publish = () => {
   const onTypeChange = (e) => {
     setImageCount(e.target.value);
   };
+
+  // 回填数据
+  useEffect(() => {
+    // 得到searParams里面的id
+
+    // console.log(searcParams.get('id'));
+    if (searcParams.get("id")) {
+      // 使用id发送请求，获取数据
+      const getArticleInfo = async () => {
+        const res = await getArticleById(searcParams.get("id"));
+        console.log(res);
+      };
+      getArticleInfo();
+      return;
+    }
+  }, []);
 
   return (
     <div className="publish">

@@ -13,14 +13,29 @@ export function createArticleAPI(data) {
   return request({
     url: "/mp/articles?draft=false",
     method: "POST",
-    data
+    data,
   });
 }
 
-export function getArticleListAPI(params){
+export function getArticleListAPI(params) {
   return request({
     url: "/mp/articles",
     method: "GET",
-    params
-  })
+    params,
+  });
+}
+
+export function deleteArticleAPI(articleId) {
+  return request({
+    url: `/mp/articles/${articleId}`,
+    method: "DELETE",
+  });
+}
+
+// 获取文章详情
+
+export function getArticleById(id) {
+  return request({
+    url: `/mp/articles/${id}`,
+  });
 }
