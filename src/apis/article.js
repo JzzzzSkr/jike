@@ -9,11 +9,18 @@ export function getChannelAPI() {
   });
 }
 
-
 export function createArticleAPI(data) {
   return request({
     url: "/mp/articles?draft=false",
     method: "POST",
     data
   });
+}
+
+export function getArticleListAPI(params){
+  return request({
+    url: "/mp/articles",
+    method: "GET",
+    params
+  })
 }
