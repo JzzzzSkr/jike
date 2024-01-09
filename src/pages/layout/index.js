@@ -16,46 +16,43 @@ const { Header, Sider } = Layout;
 
 const items = [
   {
-    label: "首页",
+    label: "Home",
     key: "/",
     icon: <HomeOutlined />,
   },
   {
-    label: "文章管理",
+    label: "Article Management",
     key: "/article",
     icon: <DiffOutlined />,
   },
   {
-    label: "创建文章",
+    label: "Create Article",
     key: "/publish",
     icon: <EditOutlined />,
   },
 ];
 
 const GeekLayout = () => {
-  // const name = "Michael";
-
-  // 获取用户个人信息
+  // Get user's personal information
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserInfo());
   }, []);
   const username = useSelector((state) => state.user.userInfo.name);
-  // console.log("userInfo", userInfo);tokenSlice
-  
-  // jump to target page
+
+  // Navigate to the target page
   const navigate = useNavigate();
   const jumpToPage = (e) => {
     navigate(e.key);
   };
 
-  // 点击tab高亮显示
+  // Highlight the selected tab when clicked
   const location = useLocation();
   const selectedKey = location.pathname;
 
-  // 点击退出按钮退出程序
+  // Handle logout when clicking the logout button
   const handleLogout = () => {
-    removeToken()
+    removeToken();
     navigate("/login");
   };
 
@@ -67,12 +64,12 @@ const GeekLayout = () => {
           <span className="user-name">{username}</span>
           <span className="user-logout">
             <Popconfirm
-              title="是否确认退出？"
-              okText="退出"
-              cancelText="取消"
+              title="Are you sure you want to log out?"
+              okText="Logout"
+              cancelText="Cancel"
               onConfirm={handleLogout}
             >
-              <LogoutOutlined /> 退出
+              <LogoutOutlined /> Logout
             </Popconfirm>
           </span>
         </div>
@@ -89,11 +86,12 @@ const GeekLayout = () => {
           ></Menu>
         </Sider>
         <Layout className="layout-content" style={{ padding: 20 }}>
-          {/* 二级路由的出口 */}
+          {/* Outlet for the secondary routes */}
           <Outlet />
         </Layout>
       </Layout>
     </Layout>
   );
 };
+
 export default GeekLayout;

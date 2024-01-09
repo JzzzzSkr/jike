@@ -19,23 +19,20 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const onFinish = (values) => {
-    // console.log(values);
-
-    // 触发异步fetchLogin，把向后端请求的token拿到并且储存在redux里面
+    // Trigger the asynchronous fetchLogin, obtain the token from the backend, and store it in Redux
     dispatch(fetchLogin(values));
 
-
-    // 页面跳转
+    // Page navigation
     setTimeout(() => {
       navigate("/");
     }, 2000);
 
-    // 提示用户
-    setAlertInfo({ show: true, type: "success", message: "登录成功" });
+    // Notify the user
+    setAlertInfo({ show: true, type: "success", message: "Login successful" });
   };
 
   const onFinishFailed = (errorInfo) => {
-    setAlertInfo({ show: true, type: "error", message: "登录失败" }); // 登录失败
+    setAlertInfo({ show: true, type: "error", message: "Login failed" }); // Login failed
   };
 
   return (
@@ -48,7 +45,7 @@ const Login = () => {
       )}
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />
-        {/* 登录表单 */}
+        {/* Login form */}
         <Form
           validateTrigger="onBlur"
           onFinish={onFinish}
@@ -56,34 +53,37 @@ const Login = () => {
         >
           <Form.Item
             name="mobile"
-            // 多条校验逻辑 先校验第一条 第一条通过之后再校验第二条
+            // Multiple validation rules - validate the first rule, and if it passes, then validate the second rule
             rules={[
               {
                 required: true,
-                message: "请输入手机号",
+                message: "Please enter your mobile number",
               },
               {
                 pattern: /^1[3-9]\d{9}$/,
-                message: "请输入正确的手机号格式",
+                message: "Please enter a valid mobile number format",
               },
             ]}
           >
-            <Input size="large" placeholder="请输入手机号" />
+            <Input size="large" placeholder="Please enter your mobile number" />
           </Form.Item>
           <Form.Item
             name="code"
             rules={[
               {
                 required: true,
-                message: "请输入验证码",
+                message: "Please enter the verification code",
               },
             ]}
           >
-            <Input size="large" placeholder="请输入验证码" />
+            <Input
+              size="large"
+              placeholder="Please enter the verification code"
+            />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" block>
-              登录
+              Login
             </Button>
           </Form.Item>
         </Form>

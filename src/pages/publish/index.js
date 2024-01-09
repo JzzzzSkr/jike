@@ -23,65 +23,65 @@ import { useChannel } from '@/hooks/useChannel'
 const { Option } = Select
 
 const Publish = () => {
-  // 获取频道列表
+  // Get channel list
   const { channelList } = useChannel()
 
-  // 提交表单
+  // Form submission
   const onFinish = (formValue) => {
     console.log(formValue)
-    // 校验封面类型imageType是否和实际的图片列表imageList数量是相等的
-    if (imageList.length !== imageType) return message.warning('封面类型和图片数量不匹配')
+    // Check if the number of cover images matches the selected image type
+    if (imageList.length !== imageType) return message.warning('Cover type does not match the number of images')
     const { title, content, channel_id } = formValue
-    // 1. 按照接口文档的格式处理收集到的表单数据
+    // 1. Format the form data as per the API documentation
     const reqData = {
       title,
       content,
       cover: {
-        type: imageType, // 封面模式
-        // 这里的url处理逻辑只是在新增时候的逻辑
-        // 编辑的时候需要做处理
+        type: imageType, // Cover mode
+        // The URL handling logic here is only for new additions
+        // Editing requires different handling
         images: imageList.map(item => {
           if (item.response) {
             return item.response.data.url
           } else {
             return item.url
           }
-        }) // 图片列表
+        }) // Image list
       },
       channel_id
     }
-    // 2. 调用接口提交
-    // 处理调用不同的接口 新增 - 新增接口  编辑状态 - 更新接口  id
+    // 2. Call the API to submit
+    // Choose different API calls for new articles and editing
     if (articleId) {
-      // 更新接口
+      // Update API
       updateArticleAPI({ ...reqData, id: articleId })
     } else {
       createArticleAPI(reqData)
     }
   }
 
-  // 上传回调
+  // Upload callback
   const [imageList, setImageList] = useState([])
   const onChange = (value) => {
-    console.log('正在上传中', value)
+    console.log('Uploading', value)
     setImageList(value.fileList)
   }
 
-  // 切换图片封面类型
+  // Switch image cover type
   const [imageType, setImageType] = useState(0)
   const onTypeChange = (e) => {
-    console.log('切换封面了', e.target.value)
+    console.log('Switched cover type', e.target.value)
     setImageType(e.target.value)
   }
 
-  // 回填数据
+  // Populate data
   const [searchParams] = useSearchParams()
   const articleId = searchParams.get('id')
-  // 获取实例
+  // Get form instance
   const [form] = Form.useForm()
   useEffect(() => {
-    // 1. 通过id获取数据
-    async function getArticleDetail () {
+    // 1. Get data by id
+    async function getArticleDetail() {
       const res = await getArticleById(articleId)
       const data = res.data
       const { cover } = data
@@ -89,21 +89,21 @@ const Publish = () => {
         ...data,
         type: cover.type
       })
-      // 为什么现在的写法无法回填封面？
-      // 数据结构的问题  set方法 -> { type: 3 }   { cover: { type: 3}}
+      // Why can't we populate the cover with the current approach?
+      // Issue with data structure, set method -> { type: 3 }   { cover: { type: 3}}
 
-      // 回填图片列表
+      // Populate image list
       setImageType(cover.type)
-      // 显示图片({url:url})
+      // Display images ({url:url})
       setImageList(cover.images.map(url => {
         return { url }
       }))
     }
-    // 只有有id的时候才能调用此函数回填
+    // Call this function for populating data only if there's an article id
     if (articleId) {
       getArticleDetail()
     }
-    // 2. 调用实例方法 完成回填
+    // 2. Call instance method to complete data population
   }, [articleId, form])
 
   return (
@@ -111,8 +111,8 @@ const Publish = () => {
       <Card
         title={
           <Breadcrumb items={[
-            { title: <Link to={'/'}>首页</Link> },
-            { title: `${articleId ? '编辑' : '发布'}文章` },
+            { title: <Link to={'/'}>Home</Link> },
+            { title: `${articleId ? 'Edit' : 'Publish'} Article` },
           ]}
           />
         }
@@ -125,33 +125,33 @@ const Publish = () => {
           form={form}
         >
           <Form.Item
-            label="标题"
+            label="Title"
             name="title"
-            rules={[{ required: true, message: '请输入文章标题' }]}
+            rules={[{ required: true, message: 'Please enter article title' }]}
           >
-            <Input placeholder="请输入文章标题" style={{ width: 400 }} />
+            <Input placeholder="Please enter article title" style={{ width: 400 }} />
           </Form.Item>
           <Form.Item
-            label="频道"
+            label="Channel"
             name="channel_id"
-            rules={[{ required: true, message: '请选择文章频道' }]}
+            rules={[{ required: true, message: 'Please select article channel' }]}
           >
-            <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              {/* value属性用户选中之后会自动收集起来作为接口的提交字段 */}
+            <Select placeholder="Please select article channel" style={{ width: 400 }}>
+              {/* The value attribute is automatically collected as the submission field when the user selects */}
               {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
             </Select>
           </Form.Item>
-          <Form.Item label="封面">
+          <Form.Item label="Cover">
             <Form.Item name="type">
               <Radio.Group onChange={onTypeChange}>
-                <Radio value={1}>单图</Radio>
-                <Radio value={3}>三图</Radio>
-                <Radio value={0}>无图</Radio>
+                <Radio value={1}>Single Image</Radio>
+                <Radio value={3}>Three Images</Radio>
+                <Radio value={0}>No Image</Radio>
               </Radio.Group>
             </Form.Item>
             {/* 
-              listType: 决定选择文件框的外观样式
-              showUploadList: 控制显示上传列表
+              listType: Determines the appearance style of the file selection box
+              showUploadList: Control whether to display the upload list
             */}
             {imageType > 0 && <Upload
               listType="picture-card"
@@ -168,22 +168,22 @@ const Publish = () => {
             </Upload>}
           </Form.Item>
           <Form.Item
-            label="内容"
+            label="Content"
             name="content"
-            rules={[{ required: true, message: '请输入文章内容' }]}
+            rules={[{ required: true, message: 'Please enter article content' }]}
           >
-            {/* 富文本编辑器 */}
+            {/* Rich text editor */}
             <ReactQuill
               className="publish-quill"
               theme="snow"
-              placeholder="请输入文章内容"
+              placeholder="Please enter article content"
             />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
               <Button size="large" type="primary" htmlType="submit">
-                发布文章
+                Publish Article
               </Button>
             </Space>
           </Form.Item>

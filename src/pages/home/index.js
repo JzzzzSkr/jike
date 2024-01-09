@@ -2,12 +2,17 @@ import * as echarts from "echarts";
 import { useEffect } from "react";
 import BarChart from "./components/barchart";
 
+import chartImage from "../../assets/chart.png";
+
 const Home = () => {
   return (
-    <div>
-      <BarChart title={'a'}></BarChart>
-      <BarChart title={'b'}></BarChart>
-    </div>
+    <div
+      style={{
+        backgroundImage: `url(${chartImage})`,
+        height: "100%",
+        width: "100%",
+      }}
+    ></div>
   );
 };
 

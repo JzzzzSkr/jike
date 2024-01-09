@@ -1,7 +1,6 @@
-// 封装api接口
 import { request } from "@/utils";
 
-// 1. 获取频道列表
+// Fetch the list of channels
 export function getChannelAPI() {
   return request({
     url: "/channels",
@@ -9,6 +8,7 @@ export function getChannelAPI() {
   });
 }
 
+// Create a new article
 export function createArticleAPI(data) {
   return request({
     url: "/mp/articles?draft=false",
@@ -17,6 +17,7 @@ export function createArticleAPI(data) {
   });
 }
 
+// Get a list of articles with optional parameters
 export function getArticleListAPI(params) {
   return request({
     url: "/mp/articles",
@@ -25,6 +26,7 @@ export function getArticleListAPI(params) {
   });
 }
 
+// Delete an article by its ID
 export function deleteArticleAPI(articleId) {
   return request({
     url: `/mp/articles/${articleId}`,
@@ -32,20 +34,18 @@ export function deleteArticleAPI(articleId) {
   });
 }
 
-// 获取文章详情
-
+// Get an article by its ID
 export function getArticleById(id) {
   return request({
     url: `/mp/articles/${id}`,
   });
 }
 
-// 更新文章表单
-
-export function updateArticleAPI (data) {
+// Update an article by its ID
+export function updateArticleAPI(data) {
   return request({
     url: `/mp/articles/${data.id}?draft=false`,
     method: 'PUT',
     data
-  })
+  });
 }

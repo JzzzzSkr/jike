@@ -1,19 +1,18 @@
-// 用户相关的请求
 import { request } from "@/utils";
 
-export function loginAPI(fromData) {
-  // const res = await request.post("/authorizations", fromData);
+// Authenticate and log in the user
+export function loginAPI(formData) {
   return request({
     url: "/authorizations",
     method: "POST",
-    data: fromData,
+    data: formData,
   });
 }
 
+// Fetch user information
 export function getUserInfoAPI() {
   return request({
     url: "/user/profile",
     method: "GET",
   });
 }
-

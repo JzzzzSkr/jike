@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import AuthRoute from "../components/AuthRouters";
 import { Suspense, lazy } from "react";
 
-// 使用 React.lazy 动态导入页面组件
+// react lazy
 const Login = lazy(() => import("@/pages/login"));
 const Layout = lazy(() => import("@/pages/layout"));
 const Article = lazy(() => import("@/pages/article"));

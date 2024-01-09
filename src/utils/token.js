@@ -1,5 +1,3 @@
-// 封装基于ls存取删三个方法
-
 const TOKENKEY = 'token_key'
 
 function setToken (token) {

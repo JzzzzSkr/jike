@@ -1,24 +1,26 @@
-// 封装获取频道列表的逻辑
-import { useState, useEffect } from 'react'
-import { getChannelAPI } from '@/apis/article'
-function useChannel () {
-  // 1. 获取频道列表所有的逻辑
-  // 获取频道列表
-  const [channelList, setChannelList] = useState([])
+// Encapsulate the logic for fetching channel lists
+import { useState, useEffect } from "react";
+import { getChannelAPI } from "@/apis/article";
+
+function useChannel() {
+  // 1. Logic to fetch the list of channels
+  // Get the channel list
+  const [channelList, setChannelList] = useState([]);
 
   useEffect(() => {
-    // 1. 封装函数 在函数体内调用接口
+    // 1. Encapsulate a function and call the API inside the function
     const getChannelList = async () => {
-      const res = await getChannelAPI()
-      setChannelList(res.data.channels)
-    }
-    // 2. 调用函数
-    getChannelList()
-  }, [])
-  // 2. 把组件中要用到的数据return出去
+      const res = await getChannelAPI();
+      setChannelList(res.data.channels);
+    };
+    // 2. Call the function
+    getChannelList();
+  }, []);
+
+  // 2. Return the data that the component needs
   return {
-    channelList
-  }
+    channelList,
+  };
 }
 
-export { useChannel }
+export { useChannel };

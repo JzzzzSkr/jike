@@ -26,11 +26,11 @@ import { useNavigate } from "react-router-dom";
 
 const Article = () => {
   const status = {
-    1: <Tag color="warning">待审核</Tag>,
-    2: <Tag color="success">审核通过</Tag>,
+    1: <Tag color="warning">Pending Review</Tag>,
+    2: <Tag color="success">Approved</Tag>,
   };
 
-  // 点击编辑按钮，携带文章id跳转到编辑页面
+  // Clicking the edit button, navigate to the edit page with the article id
   const navigate = useNavigate();
   const jumpPage = (id) => {
     console.log(id);
@@ -39,7 +39,7 @@ const Article = () => {
 
   const columns = [
     {
-      title: "封面",
+      title: "Cover",
       dataIndex: "cover",
       width: 120,
       render: (cover) => {
@@ -49,37 +49,33 @@ const Article = () => {
       },
     },
     {
-      title: "标题",
+      title: "Title",
       dataIndex: "title",
       width: 220,
     },
     {
-      title: "状态",
+      title: "Status",
       dataIndex: "status",
-      // data - 后端返回的状态status 根据它做条件渲染
-      // data === 1 => 待审核
-      // data === 2 => 审核通过
-
       render: (data) => status[data],
     },
     {
-      title: "发布时间",
+      title: "Publish Date",
       dataIndex: "pubdate",
     },
     {
-      title: "阅读数",
+      title: "Views",
       dataIndex: "read_count",
     },
     {
-      title: "评论数",
+      title: "Comments",
       dataIndex: "comment_count",
     },
     {
-      title: "点赞数",
+      title: "Likes",
       dataIndex: "like_count",
     },
     {
-      title: "操作",
+      title: "Action",
       render: (data) => {
         return (
           <Space size="middle">
@@ -87,11 +83,11 @@ const Article = () => {
               type="primary"
               shape="circle"
               icon={<EditOutlined />}
-              onClick={()=>jumpPage(data.id)}
+              onClick={() => jumpPage(data.id)}
             />
             <Popconfirm
-              title="删除文章"
-              description="确认要删除当前文章吗?"
+              title="Delete Article"
+              description="Are you sure you want to delete this article?"
               onConfirm={() => onConfirm(data)}
               okText="Yes"
               cancelText="No"
@@ -111,7 +107,7 @@ const Article = () => {
 
   const { RangePicker } = DatePicker;
 
-  // 获取文章列表
+  // Get article list
   const [reqData, setReqData] = useState({
     status: "",
     channel_id: "",
@@ -122,7 +118,6 @@ const Article = () => {
   });
   const [formData, setFormDate] = useState();
   const collection = async (values) => {
-    // console.log(values);
     setFormDate(values);
     setReqData({
       ...reqData,
@@ -133,38 +128,30 @@ const Article = () => {
     });
   };
 
-  // 渲染频道列表
+  // Render channel list
   const [channelList, setChannelList] = useState([]);
-  // 获取文章列表
+  // Get article list
   const [list, setList] = useState([]);
   useEffect(() => {
-    // 获取频道列表
+    // Get channel list
     const getChannelList = async () => {
       const channelList = await getChannelAPI();
       setChannelList(channelList.data.channels);
-      // console.log(channelList.data.channels);
     };
     getChannelList();
 
     const getArticleList = async () => {
       const res = await getArticleListAPI(reqData);
-      // console.log(formData);
-
       setList(res.data.results);
-      // console.log(res.data.results);
     };
     getArticleList();
   }, [reqData]);
 
-  // console.log(formData);
-
   const onConfirm = async (data) => {
-    // console.log('确认删除');
     console.log("id", data.id);
     const res = await deleteArticleAPI(data.id);
-    // console.log(res);
     if (res.message === "OK") {
-      message.success("删除成功");
+      message.success("Deleted successfully");
       setReqData({
         ...reqData,
       });
@@ -177,21 +164,23 @@ const Article = () => {
         title={
           <Breadcrumb
             items={[
-              { title: <Link to={"/"}>首页</Link> },
-              { title: <Link to={window.location.pathname}>文章列表</Link> },
+              { title: <Link to={"/"}>Home</Link> },
+              {
+                title: <Link to={window.location.pathname}>Article List</Link>,
+              },
             ]}
           />
         }
       >
         <Form onFinish={collection} name="filterForm">
-          <Form.Item label="状态" name="status">
+          <Form.Item label="Status" name="status">
             <Radio.Group>
-              <Radio value={""}> 全部 </Radio>
-              <Radio value={1}> 草稿 </Radio>
-              <Radio value={2}> 审核通过 </Radio>
+              <Radio value={""}>All</Radio>
+              <Radio value={1}>Draft</Radio>
+              <Radio value={2}>Approved</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="频道" name="channel">
+          <Form.Item label="Channel" name="channel">
             <Select style={{ width: "100px" }}>
               {channelList?.map((item) => (
                 <Select.Option value={item.id} key={item.id}>
@@ -200,18 +189,22 @@ const Article = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="日期" name="date">
+          <Form.Item label="Date" name="date">
             <RangePicker />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" className="filterBtn">
-              筛选
+              Filter
             </Button>
           </Form.Item>
         </Form>
       </Card>
-      {/* 表格区域 */}
-      <Card title={"根据筛选条件共查询到 " + list.length + " 条结果："}>
+      {/* Table area */}
+      <Card
+        title={
+          "Found " + list.length + " results based on the filter criteria:"
+        }
+      >
         <Table
           style={{ height: "300px" }}
           rowKey="id"
@@ -220,7 +213,6 @@ const Article = () => {
           pagination={{
             total: list.length,
             pageSize: 2,
-            // onChange: onPageChange,
           }}
         />
       </Card>
