@@ -1,67 +1,31 @@
-# Getting Started with Create React App
-
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+## `npm start`
 
 # When you are in login page. Your Username and password is 
 
 Username: 13827050382
 Password: 246810
 
-### `npm test`
+### Technical Overview
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Login page: 
 
-### `npm run build`
+When you log in with the correct username and password, the server will generate a token and store it in local storage. 
+The backend fetches user information and stores it in Redux.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Home page：
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Utilizes ECharts to create charts.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Article manage page：
 
-### `npm run eject`
+Allows users to delete or modify articles. This page uses axios for asynchronous requests.
+When a user clicks on the edit button, the system navigates to the edit page using React Navigation.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## create article
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This page utilizes Ant Design's form component. Upon finishing the form, it submits the data to the backend server to create the corresponding article. 
+If the upload is successful, the form is refreshed, and we can see the article we created on the Article Management Page.
