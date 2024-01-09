@@ -23,8 +23,11 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import img404 from "@/assets/error.png";
 import { use } from "echarts";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "antd/es/form/Form";
 
 const Article = () => {
+  const [form] = useForm();
+
   const status = {
     1: <Tag color="warning">Pending Review</Tag>,
     2: <Tag color="success">Approved</Tag>,
@@ -126,6 +129,7 @@ const Article = () => {
       begin_pubdate: values.date[0].format("YYYY-MM-DD"),
       end_pubdate: values.date[1].format("YYYY-MM-DD"),
     });
+    
   };
 
   // Render channel list
@@ -172,7 +176,7 @@ const Article = () => {
           />
         }
       >
-        <Form onFinish={collection} name="filterForm">
+        <Form onFinish={collection} name="filterForm" form={form}>
           <Form.Item label="Status" name="status">
             <Radio.Group>
               <Radio value={""}>All</Radio>

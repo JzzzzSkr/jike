@@ -8,30 +8,38 @@ import {
   Upload,
   Space,
   Select,
-  message
-} from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
-import { Link, useSearchParams } from 'react-router-dom'
-import './index.scss'
+  message,
+} from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Link, useSearchParams } from "react-router-dom";
+import "./index.scss";
 
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-import { useEffect, useState } from 'react'
-import { createArticleAPI, getArticleById, updateArticleAPI } from '@/apis/article'
-import { useChannel } from '@/hooks/useChannel' 
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { useEffect, useState } from "react";
+import {
+  createArticleAPI,
+  getArticleById,
+  updateArticleAPI,
+} from "@/apis/article";
+import { useChannel } from "@/hooks/useChannel";
+import { useForm } from "antd/es/form/Form";
 
-const { Option } = Select
+const { Option } = Select;
 
 const Publish = () => {
+  const from = useForm();
+
   // Get channel list
-  const { channelList } = useChannel()
+  const { channelList } = useChannel();
 
   // Form submission
   const onFinish = (formValue) => {
-    console.log(formValue)
+    console.log(formValue);
     // Check if the number of cover images matches the selected image type
-    if (imageList.length !== imageType) return message.warning('Cover type does not match the number of images')
-    const { title, content, channel_id } = formValue
+    if (imageList.length !== imageType)
+      return message.warning("Cover type does not match the number of images");
+    const { title, content, channel_id } = formValue;
     // 1. Format the form data as per the API documentation
     const reqData = {
       title,
@@ -40,80 +48,85 @@ const Publish = () => {
         type: imageType, // Cover mode
         // The URL handling logic here is only for new additions
         // Editing requires different handling
-        images: imageList.map(item => {
+        images: imageList.map((item) => {
           if (item.response) {
-            return item.response.data.url
+            return item.response.data.url;
           } else {
-            return item.url
+            return item.url;
           }
-        }) // Image list
+        }), // Image list
       },
-      channel_id
-    }
+      channel_id,
+    };
     // 2. Call the API to submit
     // Choose different API calls for new articles and editing
     if (articleId) {
       // Update API
-      updateArticleAPI({ ...reqData, id: articleId })
+      updateArticleAPI({ ...reqData, id: articleId });
     } else {
-      createArticleAPI(reqData)
+      createArticleAPI(reqData);
     }
-  }
+
+    form.resetFields();
+  };
 
   // Upload callback
-  const [imageList, setImageList] = useState([])
+  const [imageList, setImageList] = useState([]);
   const onChange = (value) => {
-    console.log('Uploading', value)
-    setImageList(value.fileList)
-  }
+    console.log("Uploading", value);
+    setImageList(value.fileList);
+  };
 
   // Switch image cover type
-  const [imageType, setImageType] = useState(0)
+  const [imageType, setImageType] = useState(0);
   const onTypeChange = (e) => {
-    console.log('Switched cover type', e.target.value)
-    setImageType(e.target.value)
-  }
+    console.log("Switched cover type", e.target.value);
+    setImageType(e.target.value);
+  };
 
   // Populate data
-  const [searchParams] = useSearchParams()
-  const articleId = searchParams.get('id')
+  const [searchParams] = useSearchParams();
+  const articleId = searchParams.get("id");
   // Get form instance
-  const [form] = Form.useForm()
+  const [form] = Form.useForm();
   useEffect(() => {
     // 1. Get data by id
     async function getArticleDetail() {
-      const res = await getArticleById(articleId)
-      const data = res.data
-      const { cover } = data
+      const res = await getArticleById(articleId);
+      const data = res.data;
+      const { cover } = data;
       form.setFieldsValue({
         ...data,
-        type: cover.type
-      })
+        type: cover.type,
+      });
       // Why can't we populate the cover with the current approach?
       // Issue with data structure, set method -> { type: 3 }   { cover: { type: 3}}
 
       // Populate image list
-      setImageType(cover.type)
+      setImageType(cover.type);
       // Display images ({url:url})
-      setImageList(cover.images.map(url => {
-        return { url }
-      }))
+      setImageList(
+        cover.images.map((url) => {
+          return { url };
+        })
+      );
     }
     // Call this function for populating data only if there's an article id
     if (articleId) {
-      getArticleDetail()
+      getArticleDetail();
     }
     // 2. Call instance method to complete data population
-  }, [articleId, form])
+  }, [articleId, form]);
 
   return (
     <div className="publish">
       <Card
         title={
-          <Breadcrumb items={[
-            { title: <Link to={'/'}>Home</Link> },
-            { title: `${articleId ? 'Edit' : 'Publish'} Article` },
-          ]}
+          <Breadcrumb
+            items={[
+              { title: <Link to={"/"}>Home</Link> },
+              { title: `${articleId ? "Edit" : "Publish"} Article` },
+            ]}
           />
         }
       >
@@ -127,18 +140,30 @@ const Publish = () => {
           <Form.Item
             label="Title"
             name="title"
-            rules={[{ required: true, message: 'Please enter article title' }]}
+            rules={[{ required: true, message: "Please enter article title" }]}
           >
-            <Input placeholder="Please enter article title" style={{ width: 400 }} />
+            <Input
+              placeholder="Please enter article title"
+              style={{ width: 400 }}
+            />
           </Form.Item>
           <Form.Item
             label="Channel"
             name="channel_id"
-            rules={[{ required: true, message: 'Please select article channel' }]}
+            rules={[
+              { required: true, message: "Please select article channel" },
+            ]}
           >
-            <Select placeholder="Please select article channel" style={{ width: 400 }}>
+            <Select
+              placeholder="Please select article channel"
+              style={{ width: 400 }}
+            >
               {/* The value attribute is automatically collected as the submission field when the user selects */}
-              {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+              {channelList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item label="Cover">
@@ -153,24 +178,28 @@ const Publish = () => {
               listType: Determines the appearance style of the file selection box
               showUploadList: Control whether to display the upload list
             */}
-            {imageType > 0 && <Upload
-              listType="picture-card"
-              showUploadList
-              action={'http://geek.itheima.net/v1_0/upload'}
-              name='image'
-              onChange={onChange}
-              maxCount={imageType}
-              fileList={imageList}
-            >
-              <div style={{ marginTop: 8 }}>
-                <PlusOutlined />
-              </div>
-            </Upload>}
+            {imageType > 0 && (
+              <Upload
+                listType="picture-card"
+                showUploadList
+                action={"http://geek.itheima.net/v1_0/upload"}
+                name="image"
+                onChange={onChange}
+                maxCount={imageType}
+                fileList={imageList}
+              >
+                <div style={{ marginTop: 8 }}>
+                  <PlusOutlined />
+                </div>
+              </Upload>
+            )}
           </Form.Item>
           <Form.Item
             label="Content"
             name="content"
-            rules={[{ required: true, message: 'Please enter article content' }]}
+            rules={[
+              { required: true, message: "Please enter article content" },
+            ]}
           >
             {/* Rich text editor */}
             <ReactQuill
@@ -190,7 +219,7 @@ const Publish = () => {
         </Form>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default Publish
+export default Publish;
