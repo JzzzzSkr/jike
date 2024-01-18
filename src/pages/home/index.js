@@ -1,18 +1,19 @@
-import * as echarts from "echarts";
-import { useEffect } from "react";
+import "./index.scss";
+import LinearChart from "./components/linearchart";
 import BarChart from "./components/barchart";
-
-import chartImage from "../../assets/chart.png";
+import AreaChart from "./components/areachart";
+import GradientChart from "./components/gradient";
 
 const Home = () => {
   return (
-    <div
-      style={{
-        backgroundImage: `url(${chartImage})`,
-        height: "100%",
-        width: "100%",
-      }}
-    ></div>
+    <>
+      <div className="up">
+        <div className="left"><LinearChart title="Linear Graph"></LinearChart></div>
+        <div className="middle"><BarChart title="Bar chart"></BarChart></div>
+        <div className="right"><AreaChart title={"Area chart"}></AreaChart></div>
+      </div>
+      <div className="down"><GradientChart></GradientChart></div>
+    </>
   );
 };
 
